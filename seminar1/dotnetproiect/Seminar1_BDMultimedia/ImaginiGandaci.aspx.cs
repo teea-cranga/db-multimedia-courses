@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,53 @@ namespace Seminar1_BDMultimedia {
                     }
                 }
             }
+        }
+
+        // functia ia ca input un id si returneaza imaginea (prin procedura pafisare din SQLDEVELOPER) cu id-ul respectiv
+        protected void afiseaza_imagine_Click(object sender, EventArgs e) {
+            BugApp.Text = "";
+            try {
+                connectionToBugDatabase.Open();
+            }
+            catch (OracleException er) 
+            {
+                BugApp.Text +=  er.Message; 
+            }
+            OracleCommand cmd = new OracleCommand("pafisare", connectionToBugDatabase);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("p_id", OracleDbType.Int32);
+            cmd.Parameters.Add("p_img", OracleDbType.Blob);
+            cmd.Parameters[0].Direction = System.Data.ParameterDirection.Input;
+            cmd.Parameters[1].Direction = System.Data.ParameterDirection.Output;
+            cmd.Parameters[0].Value = Convert.ToInt32(tb_afis.Text);
+            try {
+                cmd.ExecuteScalar();
+                Byte[] blob = new byte[((OracleBlob)cmd.Parameters[1].Value).Length];
+                ((OracleBlob)cmd.Parameters[1].Value).Read(blob, 0, blob.Length);
+                string myimg = Convert.ToBase64String(blob, 0, blob.Length);
+                afis_img.ImageUrl = "data:image/gif;base64," + myimg;
+            }
+            catch (OracleException ex) { BugApp.Text += ex.Message; }
+        }
+
+        protected void gen_semn_Click(object sender, EventArgs e) {
+            try {
+                connectionToBugDatabase.Open();
+            }
+            catch(OracleException ex) {
+                BugApp.Text += ex.Message;
+            }
+            OracleCommand cmd = new OracleCommand("psgen_semn", connectionToBugDatabase);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            try {
+                cmd.ExecuteNonQuery();
+            }
+            catch (OracleException ex) {
+                BugApp.Text += ex.Message;
+            }
+
+            connectionToBugDatabase.Close();
+            BugApp.Text += "Semnaturi generate cu succes";
         }
     }
 }
