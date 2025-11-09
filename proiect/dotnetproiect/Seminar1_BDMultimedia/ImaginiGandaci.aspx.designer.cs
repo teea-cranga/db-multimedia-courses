@@ -7,10 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Seminar1_BDMultimedia {
+namespace Seminar1_BDMultimedia
+{
 
 
-    public partial class ImaginiGandaci {
+    public partial class ImaginiGandaci
+    {
 
         /// <summary>
         /// form1 control.
@@ -31,13 +33,22 @@ namespace Seminar1_BDMultimedia {
         protected global::System.Web.UI.WebControls.Label BugApp;
 
         /// <summary>
-        /// TextBoxID control.
+        /// Button1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBoxID;
+        protected global::System.Web.UI.WebControls.Button Button1;
+
+        /// <summary>
+        /// Button2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
         /// TextBoxDen control.
@@ -121,42 +132,6 @@ namespace Seminar1_BDMultimedia {
         protected global::System.Web.UI.WebControls.Button gen_semn;
 
         /// <summary>
-        /// label_c control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label label_c;
-
-        /// <summary>
-        /// label_t control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label label_t;
-
-        /// <summary>
-        /// label_f control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label label_f;
-
-        /// <summary>
-        /// label_l control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label label_l;
-
-        /// <summary>
         /// label_ct control.
         /// </summary>
         /// <remarks>
@@ -166,12 +141,21 @@ namespace Seminar1_BDMultimedia {
         protected global::System.Web.UI.WebControls.Label label_ct;
 
         /// <summary>
-        /// FileUploadC control.
+        /// FileUploadS control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload FileUploadC;
+        protected global::System.Web.UI.WebControls.FileUpload FileUploadS;
+
+        /// <summary>
+        /// LabelDescriere control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelDescriere;
     }
 }

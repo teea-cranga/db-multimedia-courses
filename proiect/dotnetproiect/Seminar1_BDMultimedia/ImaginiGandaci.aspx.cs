@@ -2,7 +2,9 @@
 using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -28,11 +30,11 @@ namespace Seminar1_BDMultimedia {
             BugApp.Text = "";
             if (FileUpload1.HasFile) {
 
-                FileUpload1.SaveAs(@"T:\BD Multimedia" + FileUpload1.FileName);
+                FileUpload1.SaveAs(@"C:\Users\Teea\Desktop\" + FileUpload1.FileName);
 
                 BugApp.Text = "Fisier incarcat: " + FileUpload1.FileName;
 
-                using (var image = System.IO.File.OpenRead(@"T:\BD Multimedia\" + FileUpload1.FileName)) {
+                using (var image = System.IO.File.OpenRead(@"C:\Users\Teea\Desktop\" + FileUpload1.FileName)) {
 
                     var ImageBytes = new byte[image.Length];
                     image.Read(ImageBytes, 0, (int)image.Length);
@@ -48,16 +50,14 @@ namespace Seminar1_BDMultimedia {
                     // adaugam parametrii pentru procedura SQL
                     OracleCommand oracleCommand = new OracleCommand("PS_INSERARE_IMG", connectionToBugDatabase);
                     oracleCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                    oracleCommand.Parameters.Add("v_id", OracleDbType.Int64);
                     oracleCommand.Parameters.Add("v_denumire", OracleDbType.Varchar2);
                     oracleCommand.Parameters.Add("v_denumire_stiintifica", OracleDbType.Varchar2);
                     oracleCommand.Parameters.Add("v_fisier", OracleDbType.Blob);
 
                     // ne folosim de parametri sa adaugam valorile din form
-                    oracleCommand.Parameters[0].Value = Convert.ToInt64(TextBoxID.Text);
-                    oracleCommand.Parameters[1].Value = TextBoxDen.Text;
-                    oracleCommand.Parameters[2].Value = TextBoxDenSt.Text;
-                    oracleCommand.Parameters[3].Value = ImageBytes;
+                    oracleCommand.Parameters[0].Value = TextBoxDen.Text;
+                    oracleCommand.Parameters[1].Value = TextBoxDenSt.Text;
+                    oracleCommand.Parameters[2].Value = ImageBytes;
 
                     try {
                         oracleCommand.ExecuteNonQuery();
@@ -86,7 +86,7 @@ namespace Seminar1_BDMultimedia {
             cmd.Parameters[1].Direction = System.Data.ParameterDirection.Output;
             cmd.Parameters[0].Value = Convert.ToInt32(tb_afis.Text);
             try {
-                cmd.ExecuteScalar();
+                cmd.ExecuteNonQuery();
                 Byte[] blob = new byte[((OracleBlob)cmd.Parameters[1].Value).Length];
                 ((OracleBlob)cmd.Parameters[1].Value).Read(blob, 0, blob.Length);
                 string myimg = Convert.ToBase64String(blob, 0, blob.Length);
@@ -113,6 +113,57 @@ namespace Seminar1_BDMultimedia {
 
             connectionToBugDatabase.Close();
             BugApp.Text += "Semnaturi generate cu succes";
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("AdaugaVideo.aspx");
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("AfisareGandaci.aspx");
+        }
+
+        protected void Unnamed5_Click(object sender, EventArgs e)
+        {
+            if (FileUploadS.HasFile)
+            {
+                FileUploadS.SaveAs(@"C:\Users\Teea\Desktop\" + FileUploadS.FileName);
+                using (var img = System.IO.File.OpenRead(@"C:\Users\Teea\Desktop\" + FileUploadS.FileName))
+                {
+                    Byte[] imageByte = new Byte[img.Length];
+                    img.Read(imageByte, 0, (int)img.Length);
+                    try
+                    {
+                        connectionToBugDatabase.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        BugApp.Text = "Eroare " + ex.Message;
+                    }
+                    OracleCommand cmd = new OracleCommand("PSREGASIRE", connectionToBugDatabase);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("fis", OracleDbType.Blob);
+                    cmd.Parameters.Add("vdetalii", OracleDbType.Varchar2, 255);
+                    cmd.Parameters[0].Direction = ParameterDirection.Input;
+                    cmd.Parameters[1].Direction = ParameterDirection.Output;
+                    cmd.Parameters[0].Value = imageByte;
+
+                    try
+                    {
+                        cmd.ExecuteScalar();
+                    }
+                    catch (OracleException ex)
+                    {
+                        BugApp.Text = "Eroare " + ex.Message;
+                    }
+                    LabelDescriere.Text = cmd.Parameters[1].Value.ToString();
+                    string[] den = LabelDescriere.Text.Split(',');
+                    connectionToBugDatabase.Close();
+                    TextBoxDen.Text = den[0];
+                }
+            }
         }
     }
 }
